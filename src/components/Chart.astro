@@ -109,7 +109,7 @@ const chartId = `chart-${Math.random().toString(36).slice(2, 11)}`;
     '#ea580c',
   ];
 
-  function applyTheme(option, isDark) {
+  function applyTheme(option: Record<string, any>, isDark: boolean) {
     const axisColor = isDark ? '#64748b' : '#94a3b8';
     const splitColor = isDark ? '#1e293b' : '#e2e8f0';
     const textColor = isDark ? '#e2e8f0' : '#334155';
@@ -143,7 +143,7 @@ const chartId = `chart-${Math.random().toString(36).slice(2, 11)}`;
   let echartsPromise = null;
   const getECharts = () => (echartsPromise ??= loadECharts());
 
-  async function render(el) {
+  async function render(el: HTMLElement) {
     if (el.dataset.rendered === '1') return;
     el.dataset.rendered = '1';
 
@@ -177,7 +177,9 @@ const chartId = `chart-${Math.random().toString(36).slice(2, 11)}`;
   }
 
   function initAll() {
-    document.querySelectorAll('.echart').forEach(render);
+    document
+      .querySelectorAll<HTMLElement>('.echart')
+      .forEach((el) => void render(el));
   }
 
   if (document.readyState === 'loading') {
