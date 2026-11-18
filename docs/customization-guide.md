@@ -7,7 +7,7 @@
 ## 目录结构速查
 
 ```
-site/
+github-pages/
 ├─ astro.config.mjs          站点配置（域名、插件、base）
 ├─ package.json              依赖与命令
 ├─ scripts/
@@ -18,6 +18,10 @@ site/
 │  ├─ favicon.svg            浏览器标签图标
 │  ├─ og.png                 分享卡片图（1200×630）
 │  └─ robots.txt             搜索引擎抓取规则
+├─ data/                     数据工作区（按日期/板块分层）
+├─ static/                   静态产出（按日期/板块分层）
+├─ tools/node22/             便携版 Node（不入版本库）
+├─ docs/                     定制指南、素材清单、发布脚本
 └─ src/
    ├─ styles/global.css      ★ 所有配色、字号、暗色模式都在这
    ├─ content.config.ts      文章 frontmatter 的字段定义
@@ -50,7 +54,7 @@ npm run check     # 类型与配置检查
 ```
 
 > **注意**：本机系统 Node 是 22.22.2，而 Astro 7 要求 ≥ 22.23.4。
-> `npm run` 系列命令已经接好了适配层，会自动使用 `.tools/node22` 里的便携版。
+> `npm run` 系列命令已经接好了适配层，会自动使用 `tools/node22` 里的便携版。
 > 如果你以后升级了系统 Node，它会自动改用系统版本，不用改任何配置。
 
 **发布流程**：

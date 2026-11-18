@@ -4,10 +4,10 @@
  *
  * 背景：本机的系统 Node 是 22.22.2，而 Astro 7 要求 >= 22.23.4，
  * 直接跑 `npm run build` 会报 "Node.js v22.22.2 is not supported by Astro!"。
- * 我们在 .tools/node22 放了一份便携版 Node 22.23.5 专门给这个项目用。
+ * 我们在项目内的 tools/node22 放了一份便携版 Node 22.23.5 专门给这个项目用。
  *
  * 这个脚本的逻辑：
- *   1. 如果便携版 Node 存在且版本满足要求 → 用它
+ *   1. 如果项目内的便携版 Node 存在且版本满足要求 → 用它
  *   2. 否则退回系统 Node（万一你以后升级了系统 Node，也能正常工作）
  *
  * 用法：node scripts/astro.mjs build|dev|preview|check
@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const siteRoot = resolve(__dirname, '..');
-const portableNode = resolve(siteRoot, '..', '.tools', 'node22', 'node.exe');
+const portableNode = resolve(siteRoot, 'tools', 'node22', 'node.exe');
 const astroBin = join(siteRoot, 'node_modules', 'astro', 'bin', 'astro.mjs');
 
 const MIN_MAJOR = 22;

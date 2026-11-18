@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "date": "2026-11-18",
+    "snapshot_time": "1530",
+    "source": "通达信行情接口 tdx_quotes",
+    "description": "上证指数与深证成指盘后快照，用于首篇数据分析文章",
+    "note": "单日快照，非时间序列。做趋势分析需用 tdx_kline 重新拉取。"
+  },
+  "indices": [
+    {
+      "code": "000001",
+      "setcode": "1",
+      "name": "上证指数",
+      "open": 3596.55,
+      "high": 3596.55,
+      "low": 3560.44946,
+      "close": 3587.83179,
+      "prev_close": 3584.57935,
+      "change_pct": 0.09,
+      "volume_lots": 423934832,
+      "amount_cny": 650231677000,
+      "amount_yi": 6502.32,
+      "turnover_pct": 0.871215045,
+      "avg_price": 3548.23926,
+      "total_market_cap": 62745844100000,
+      "pe_ttm": 16.3867,
+      "free_float_shares": 189822688,
+      "inside_lots": 211930481,
+      "outside_lots": 212004351,
+      "up_count": 609,
+      "down_count": 1682,
+      "flat_count": null
+    },
+    {
+      "code": "399001",
+      "setcode": "0",
+      "name": "深证成指",
+      "open": 10678.2949,
+      "high": 10722.6719,
+      "low": 10515.1426,
+      "close": 10659.4111,
+      "prev_close": 10638.5244,
+      "change_pct": 0.2,
+      "volume_lots": 507035743,
+      "amount_cny": 719470526000,
+      "amount_yi": 7194.71,
+      "turnover_pct": 2.05412936,
+      "avg_price": 10528.5596,
+      "total_market_cap": 35968266500000,
+      "pe_ttm": 33.3955,
+      "free_float_shares": 153956416,
+      "inside_lots": 262156240,
+      "outside_lots": 244879553,
+      "up_count": 701,
+      "down_count": 2171,
+      "flat_count": 67
+    }
+  ],
+  "derived": {
+    "total_amount_yi": 13697.03,
+    "amount_diff_pct": 10.64,
+    "turnover_ratio": 2.36,
+    "pe_ratio": 2.04,
+    "sz_inside_minus_outside_lots": 17276687,
+    "sh_inside_minus_outside_lots": -73870,
+    "sz_down_ratio": 0.756
+  },
+  "observations": [
+    "深证成指上涨 0.20%，但深市 701 涨 / 2171 跌，76% 个股下跌 —— 权重股效应",
+    "深市 PE 33.4 对沪市 16.4，市值规模更小但估值更高",
+    "深市内盘比外盘多 1727 万手，卖压来自中小市值主动抛售",
+    "沪市内外盘基本均衡"
+  ],
+  "limitations": [
+    "单日快照不能推断趋势，需时间序列",
+    "涨跌家数只覆盖深市，两市不可直接横向比较",
+    "内外盘基于成交价与盘口比较推断，薄盘口时噪音大",
+    "PE 为静态快照，未做成分调整与异常值剔除"
+  ]
+}
