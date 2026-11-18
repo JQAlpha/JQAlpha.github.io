@@ -68,7 +68,7 @@ static/2026/11/19/charts/                # 年 / 月 / 日 / 板块
 npm run dev       # 本地开发，http://localhost:4321
 npm run build     # 构建到 dist/
 npm run preview   # 预览构建产物
-npm run check     # 类型与配置检查
+npm run check     # 类型与配置检查（需 @astrojs/check + typescript）
 ```
 
 > 本机系统 Node 是 22.22.2，Astro 7 要求 ≥ 22.23.4。
@@ -84,6 +84,41 @@ git push
 ```
 
 或直接跑 `docs/push-site.bat`（会先本地构建校验再推送）。
+
+---
+
+## 环境基线
+
+体检日期 2026-11-19，全部通过：
+
+| 项 | 状态 |
+|---|---|
+| `npm run build` | ✅ 7 页构建成功，产物 1.2MB |
+| `npm run check` | ✅ **0 errors / 0 warnings / 0 hints** |
+| `npm run dev` | ✅ 启动约 0.5s，热更新正常 |
+| `npm audit` | ✅ 0 漏洞 |
+| `npm run preview` | ✅ 正常 |
+| Python 数据栈 | ✅ pandas / numpy / matplotlib / plotly / nbformat / nbconvert / papermill / scipy / statsmodels 全装齐 |
+| Notebook 转换 | ✅ `python scripts/ipynb_to_md.py` 正常（当前无 .ipynb 待转） |
+| Git 推送 | ✅ SSH 免密，本地与远程同步 |
+| CI 部署 | ✅ 连续 6 次 success |
+| 线上站点 | ✅ https://jqalpha.com 全 200，Let's Encrypt 证书有效 |
+
+### Node 版本说明
+
+| 位置 | 版本 | 用途 |
+|---|---|---|
+| 系统 Node | 22.22.2 | 不满足 Astro 7 要求，仅供其他项目使用 |
+| `tools/node22/` | 22.23.5 | 本项目专用，npm run 自动调用 |
+| CI (ubuntu-latest) | 24 | 部署时使用 |
+
+### 类型检查
+
+`tsconfig.json` 继承 `astro/tsconfigs/strict`。**这个文件不能删** ——
+缺了它 `getCollection()` 的类型推断会完全失效，`npm run check` 会报出十几个假错误。
+
+修改内容集合字段后，用 `npm run check` 验证 schema 类型是否正确。
+
 
 ---
 
