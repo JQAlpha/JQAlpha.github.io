@@ -1,0 +1,188 @@
+---
+/**
+ * 交互式 ECharts 图表（纯客户端脚本，无需 React/Preact 集成）
+ *
+ * 在 .mdx 中使用：
+ *
+ *   import Chart from '../../components/Chart.astro';
+ *
+ *   <Chart
+ *     option={{
+ *       xAxis: { type: 'category', data: ['1月', '2月'] },
+ *       yAxis: { type: 'value' },
+ *       series: [{ type: 'bar', data: [23, 45] }],
+ *     }}
+ *     height="320px"
+ *   />
+ *
+ * 说明：
+ *   - 主题色、坐标轴、tooltip 样式由组件统一套用，传入的 option 只需给数据与结构
+ *   - 自动跟随系统深浅色模式
+ *   - 容器尺寸变化时自动 resize
+ */
+interface Props {
+  option: Record<string, unknown>;
+  height?: string;
+  theme?: 'light' | 'dark';
+}
+
+const { option, height = '360px', theme = 'light' } = Astro.props;
+
+const chartId = `chart-${Math.random().toString(36).slice(2, 11)}`;
+---
+
+<div
+  id={chartId}
+  class="echart"
+  style={`height: ${height}; width: 100%;`}
+  data-option={JSON.stringify(option)}
+  data-theme={theme}
+></div>
+
+<style>
+  .echart {
+    margin: 1.6em 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.5rem;
+    background: var(--bg-elevated);
+  }
+</style>
+
+<script>
+  /**
+   * ECharts 体积约 600KB，直接 import 会拖慢所有页面。
+   * 这里用动态 import：只有页面里真的存在 .echart 元素时才加载。
+   * 没有图表的页面（如首页、关于页）完全不会下载这部分代码。
+   */
+  async function loadECharts() {
+    const [echarts, charts, components, renderers] = await Promise.all([
+      import('echarts/core'),
+      import('echarts/charts'),
+      import('echarts/components'),
+      import('echarts/renderers'),
+    ]);
+
+    const {
+      BarChart,
+      LineChart,
+      PieChart,
+      ScatterChart,
+    } = charts;
+    const {
+      GridComponent,
+      TooltipComponent,
+      LegendComponent,
+      TitleComponent,
+      DataZoomComponent,
+      MarkLineComponent,
+    } = components;
+    const { CanvasRenderer } = renderers;
+
+    echarts.use([
+      BarChart,
+      LineChart,
+      PieChart,
+      ScatterChart,
+      GridComponent,
+      TooltipComponent,
+      LegendComponent,
+      TitleComponent,
+      DataZoomComponent,
+      MarkLineComponent,
+      CanvasRenderer,
+    ]);
+
+    return echarts;
+  }
+
+  const PALETTE = [
+    '#2563eb',
+    '#7c3aed',
+    '#0891b2',
+    '#059669',
+    '#d97706',
+    '#dc2626',
+    '#db2777',
+    '#4f46e5',
+    '#65a30d',
+    '#ea580c',
+  ];
+
+  function applyTheme(option, isDark) {
+    const axisColor = isDark ? '#64748b' : '#94a3b8';
+    const splitColor = isDark ? '#1e293b' : '#e2e8f0';
+    const textColor = isDark ? '#e2e8f0' : '#334155';
+
+    const o = { ...option };
+    o.textStyle = o.textStyle || { color: textColor };
+    o.color = o.color || PALETTE;
+
+    if (o.xAxis && !o.xAxis.axisLabel) o.xAxis.axisLabel = { color: axisColor };
+    if (o.yAxis && !o.yAxis.axisLabel) o.yAxis.axisLabel = { color: axisColor };
+
+    if (o.xAxis && o.xAxis.type !== 'value') {
+      o.xAxis.axisLine = o.xAxis.axisLine || { lineStyle: { color: splitColor } };
+      o.xAxis.axisTick = o.xAxis.axisTick || { show: false };
+    }
+    if (o.yAxis && o.yAxis.type !== 'category') {
+      o.yAxis.axisLine = o.yAxis.axisLine || { show: false };
+      o.yAxis.splitLine = o.yAxis.splitLine || { lineStyle: { color: splitColor } };
+    }
+    if (o.tooltip) {
+      o.tooltip.backgroundColor = isDark ? '#111c33' : '#ffffff';
+      o.tooltip.borderColor = splitColor;
+      o.tooltip.textStyle = { color: textColor };
+    }
+    if (o.legend) {
+      o.legend.textStyle = o.legend.textStyle || { color: textColor };
+    }
+    return o;
+  }
+
+  let echartsPromise = null;
+  const getECharts = () => (echartsPromise ??= loadECharts());
+
+  async function render(el) {
+    if (el.dataset.rendered === '1') return;
+    el.dataset.rendered = '1';
+
+    let base;
+    try {
+      base = JSON.parse(el.dataset.option || '{}');
+    } catch (err) {
+      console.error('[chart] option 解析失败', err);
+      el.innerHTML =
+        '<p style="color:#dc2626;padding:1rem;font-size:14px">图表数据解析失败</p>';
+      return;
+    }
+
+    const isDark =
+      el.dataset.theme === 'dark' ||
+      window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    const echarts = await getECharts();
+    const chart = echarts.init(el, null, { renderer: 'canvas' });
+    chart.setOption(applyTheme(base, isDark));
+
+    const observer = new ResizeObserver(() => chart.resize());
+    observer.observe(el);
+
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    media.addEventListener('change', () => {
+      el.dataset.rendered = '0';
+      chart.dispose();
+      render(el);
+    });
+  }
+
+  function initAll() {
+    document.querySelectorAll('.echart').forEach(render);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
+  }
+</script>
