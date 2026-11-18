@@ -43,6 +43,7 @@ github-pages/
 ├─ docs/
 │  ├─ customization-guide.md      ★ 站点定制指南（改页面看这里）
 │  ├─ material-checklist.md       素材准备清单
+│  ├─ python-environment.md       ★ Python 环境说明（解释器/环境变量/装包方式）
 │  └─ push-site.bat               一键构建 + 提交 + 推送
 └─ astro.config.mjs               站点配置（域名、插件）
 ```
@@ -165,6 +166,25 @@ push 到 `main` 后自动发布，约 1-2 分钟生效。
 - **同花顺**：A 股财务三表、估值、题材概念
 
 Python 数据栈已装齐：pandas / numpy / matplotlib / plotly / nbformat / nbconvert / papermill / scipy / statsmodels。
+
+### Python 环境（重要）
+
+本机有**两套 Python**，`python` 命令在不同终端解析到不同解释器，
+`pip` 命令则固定指向 Miniconda —— 这会导致 `pip install` 装错地方。
+
+**本项目统一使用：**
+```
+C:\Users\LAPTOP-Gary\.workbuddy\binaries\python\versions\3.13.12\python.exe
+```
+
+**装包永远用 `python -m pip`，不要用裸 `pip`。**
+
+查询当前应使用的解释器：
+```bash
+python scripts/which_python.py --check
+```
+
+完整说明（环境变量、conda 环境、故障排查）见 **`docs/python-environment.md`**。
 
 ---
 
