@@ -1,0 +1,62 @@
+---
+import Header from '../components/Header.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const projects = [
+  {
+    name: 'JQAlpha',
+    desc: 'A 股多因子选股与回测框架，把因子计算、组合构建、绩效评估串成一条流水线。',
+    stack: ['Python', 'pandas', 'backtrader'],
+    link: 'https://github.com/JQAlpha',
+  },
+  {
+    name: 'Useful-Tips',
+    desc: '日常电脑使用里攒下来的小技巧与脚本，解决重复踩的坑。',
+    stack: ['Shell'],
+    link: 'https://github.com/JQAlpha/Useful-Tips',
+  },
+];
+---
+
+<BaseLayout title="项目 · Gary Wong" description="开源项目与正在进行的数据分析实践。">
+  <Header current="/projects" />
+
+  <main class="mx-auto max-w-3xl px-5 py-14">
+    <header class="mb-10">
+      <h1 class="text-2xl font-medium sm:text-3xl">项目</h1>
+      <p class="mt-3" style="color: var(--text-muted);">
+        开源项目，以及正在进行中的数据分析实践。
+      </p>
+    </header>
+
+    <div class="flex flex-col gap-5">
+      {
+        projects.map((project) => (
+          <a
+            href={project.link}
+            class="card group p-6 transition-colors hover:border-[var(--border-strong)]"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <h2 class="font-medium transition-colors group-hover:text-[var(--color-accent)]">
+                {project.name}
+              </h2>
+              <span class="shrink-0 text-sm" style="color: var(--text-faint);">
+                ↗
+              </span>
+            </div>
+            <p class="mt-2.5 leading-relaxed" style="color: var(--text-muted);">
+              {project.desc}
+            </p>
+            <div class="mt-4 flex flex-wrap gap-2">
+              {project.stack.map((tech) => (
+                <span class="tag">{tech}</span>
+              ))}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </main>
+</BaseLayout>

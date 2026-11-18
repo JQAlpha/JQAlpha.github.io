@@ -1,0 +1,24 @@
+---
+import Header from '../components/Header.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 · Gary Wong" description="页面不存在。">
+  <Header current="" />
+
+  <main class="mx-auto flex max-w-3xl flex-col items-center px-5 py-24 text-center">
+    <p class="font-mono text-6xl font-medium" style="color: var(--text-faint);">404</p>
+    <h1 class="mt-5 text-xl font-medium">这个页面不存在</h1>
+    <p class="mt-3 max-w-md" style="color: var(--text-muted);">
+      链接可能已经失效，或者地址拼写有误。
+    </p>
+    <div class="mt-8 flex gap-3">
+      <a
+        href="/"
+        class="rounded-lg px-4 py-2 text-sm font-medium text-white"
+        style="background: var(--color-accent);">回到首页</a
+      >
+      <a href="/blog" class="card rounded-lg px-4 py-2 text-sm font-medium">浏览文章</a>
+    </div>
+  </main>
+</BaseLayout>

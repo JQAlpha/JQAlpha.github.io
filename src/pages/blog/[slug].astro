@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from 'astro:content';
+import Header from '../../components/Header.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const { title, description, pubDate, updatedDate, tags = [] } = post.data;
+
+const formatted = pubDate.toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={`${title} · Gary Wong`} description={description}>
+  <Header current="/blog" />
+
+  <main class="mx-auto max-w-3xl px-5 py-14">
+    <article>
+      <a
+        href="/blog"
+        class="mb-6 inline-flex items-center gap-1.5 text-sm transition-colors"
+        style="color: var(--text-faint);"
+      >
+        ← 返回文章列表
+      </a>
+
+      <header class="mb-9">
+        <h1 class="text-2xl font-medium leading-snug sm:text-3xl">{title}</h1>
+        <p class="mt-3 text-lg" style="color: var(--text-muted);">{description}</p>
+        <div
+          class="mt-5 flex flex-wrap items-center gap-3 text-sm"
+          style="color: var(--text-faint);"
+        >
+          <time datetime={pubDate.toISOString()}>{formatted}</time>
+          {
+            updatedDate && (
+              <span>
+                更新于{' '}
+                {updatedDate.toLocaleDateString('zh-CN', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </span>
+            )
+          }
+          {tags.map((tag) => <span class="tag">{tag}</span>)}
+        </div>
+      </header>
+
+      <div class="prose-body">
+        <Content />
+      </div>
+    </article>
+
+    <div
+      class="mt-14 flex items-center justify-between border-t pt-6 text-sm"
+      style="border-color: var(--border); color: var(--text-faint);"
+    >
+      <a href="/blog" class="transition-colors hover:text-[var(--text)]">← 全部文章</a>
+      <a href="mailto:hi@jqalpha.com" class="transition-colors hover:text-[var(--text)]"
+        >有问题？写信给我</a
+      >
+    </div>
+  </main>
+</BaseLayout>

@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# 放行国内主流搜索引擎爬虫
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+User-agent: YisouSpider
+Allow: /
+
+Sitemap: https://jqalpha.com/sitemap-index.xml

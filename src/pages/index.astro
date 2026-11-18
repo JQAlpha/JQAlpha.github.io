@@ -1,0 +1,121 @@
+---
+import { getCollection } from 'astro:content';
+import Header from '../components/Header.astro';
+import PostCard from '../components/PostCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const featured = posts.slice(0, 4);
+---
+
+<BaseLayout>
+  <Header current="/" />
+
+  <main class="mx-auto max-w-3xl px-5">
+    <section class="py-14 sm:py-20">
+      <div class="flex flex-col gap-6 sm:flex-row sm:items-center">
+        <div class="flex-1">
+          <p class="mb-3 text-sm" style="color: var(--text-faint);">
+            {new Date().getFullYear()} · Beijing
+          </p>
+          <h1 class="text-3xl font-medium tracking-tight sm:text-4xl">Gary Wong</h1>
+          <p class="mt-4 max-w-xl text-lg" style="color: var(--text-muted);">
+            专注 A 股量化研究与数据分析，记录思考、实验与代码。
+          </p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a
+              href="/blog"
+              class="rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors"
+              style="background: var(--color-accent);"
+            >
+              阅读文章
+            </a>
+            <a
+              href="/projects"
+              class="card rounded-lg px-4 py-2 text-sm font-medium transition-colors hover:border-[var(--border-strong)]"
+            >
+              查看项目
+            </a>
+          </div>
+        </div>
+        <div class="shrink-0">
+          <img
+            src="/avatar.svg"
+            alt="Gary Wong"
+            width="120"
+            height="120"
+            class="h-28 w-28 rounded-2xl object-cover sm:h-32 sm:w-32"
+            style="border: 1px solid var(--border); box-shadow: var(--shadow);"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="pb-16">
+      <div class="mb-5 flex items-baseline justify-between">
+        <h2 class="text-lg font-medium">最新文章</h2>
+        <a href="/blog" class="text-sm transition-colors" style="color: var(--color-accent);"
+          >全部 →</a
+        >
+      </div>
+
+      {
+        featured.length === 0 ? (
+          <div class="card p-8 text-center" style="color: var(--text-muted);">
+            <p>文章正在路上，很快就会出现在这里。</p>
+            <p class="mt-2 text-sm" style="color: var(--text-faint);">
+              下次 push 就会自动发布。
+            </p>
+          </div>
+        ) : (
+          <div class="flex flex-col divide-y" style="border-color: var(--border);">
+            {featured.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </div>
+        )
+      }
+    </section>
+
+    <section class="pb-20">
+      <h2 class="mb-5 text-lg font-medium">在做些什么</h2>
+      <div class="grid gap-4 sm:grid-cols-3">
+        {
+          [
+            { t: '量化研究', d: '因子有效性、行业轮动、策略回测的实验记录。' },
+            { t: '数据分析', d: '用 Python 处理真实市场数据，从数据里找信号。' },
+            { t: '可视化', d: '让图表讲清楚结论，而不是堆砌装饰。' },
+          ].map((item) => (
+            <div class="card p-5">
+              <h3 class="font-medium">{item.t}</h3>
+              <p class="mt-2 text-sm leading-relaxed" style="color: var(--text-muted);">
+                {item.d}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t py-10" style="border-color: var(--border);">
+    <div
+      class="mx-auto flex max-w-3xl flex-col items-center justify-between gap-3 px-5 text-sm sm:flex-row"
+      style="color: var(--text-faint);"
+    >
+      <p>© {new Date().getFullYear()} Gary Wong · Built with Astro</p>
+      <div class="flex gap-4">
+        <a href="/rss.xml" class="transition-colors hover:text-[var(--text)]">RSS</a>
+        <a
+          href="https://github.com/JQAlpha"
+          class="transition-colors hover:text-[var(--text)]"
+          target="_blank"
+          rel="noopener noreferrer">GitHub</a
+        >
+        <a href="mailto:hi@jqalpha.com" class="transition-colors hover:text-[var(--text)]">Email</a>
+      </div>
+    </div>
+  </footer>
+</BaseLayout>

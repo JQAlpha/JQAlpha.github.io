@@ -1,0 +1,29 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+.astro/
+
+# environment
+.env
+.env.production
+.env.local
+
+# logs
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# python (数据分析脚本)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
